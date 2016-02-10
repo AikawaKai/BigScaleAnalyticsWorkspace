@@ -1,3 +1,14 @@
+
+def counter(fun):
+    fun.count = 0
+
+    def wrapper(*args):
+        fun.count += 1
+        res = fun(*args)
+        return res
+    return wrapper
+
+
 class Vector(object):
 
     def __init__(self, vector):
@@ -24,6 +35,14 @@ class Vector(object):
             vector.append(elem)
         return sum(vector)
 
+    def __mul__(self, elem):
+        if type(elem) is float:
+            vectresult = list(map(lambda x: x * elem, self.vector))
+            return Vector(vectresult)
+
+    def generateVector1n(n):
+        return Vector([1/n for i in range(0, n)])
+
     def __str__(self):
         basic = ""
         for elem in self.vector:
@@ -44,12 +63,29 @@ class Matrix(object):
             resV.append(elem)
         return Vector(resV)
 
+    def __str__(self):
+        basic = ""
+        for row in self.matrix:
+            for elem in row:
+                basic += "{0:>4.2} ".format(float(elem))
+            basic += "\n"
+        return basic
 
+
+# v' = M * v  without spider traps or dead ends
 def basicPageRank(matrix, v, pv):
     diffv = v - pv
-    print("Current:{0} Previous:{1}".format(v, pv))
-    print("Diff {0}".format(diffv), end="\n\n")
+    # print("Current:{0} Previous:{1}".format(v, pv))
+    # print("Diff {0}".format(diffv), end="\n\n")
     return v if sum(diffv.vector) <= 0.0009 else basicPageRank(matrix, matrix.mulVect(v),v)
+
+
+#  Beta * M * v + (1 - Beta) * 1/n * 1v taxation for spider traps and dead ends
+def taxationPageRank(matrix, v, pv, vn):
+    diffv = v - pv
+    # print("Current:{0} Previous:{1}".format(v, pv))
+    # print("Diff {0}".format(diffv), end="\n\n")
+    return v if sum(diffv.vector) <= 0.0009 else taxationPageRank(matrix, (matrix.mulVect(v) * 0.8) + (vn * 0.2), v, vn)
 
 
 if __name__ == '__main__':
@@ -58,9 +94,32 @@ if __name__ == '__main__':
     basicVector = Vector([1/4, 1/4, 1/4, 1/4])
     Matrix1 = Matrix(matrix)
     vectorResult = basicPageRank(Matrix1, basicVector, Vector([1, 1, 1, 1]))
-    print("Page Rank: {0}".format(str(vectorResult)))
+    print("\n#Basic example with a connected graphs\n")
+    print("Matrix:\n")
+    print(Matrix1)
+    print("Page Rank basic: {0}".format(str(vectorResult)))
     matrix1 = [[0, 1/2, 1, 0], [1/3, 0, 0, 1/2], [1/3, 0, 0, 1/2],
                [1/3, 1/2, 0, 0]]
     Matrix2 = Matrix(matrix1)
+    print("_____________________________________________________", end="\n\n")
+    print("#Another example with a connected graphs\n")
+    print("Matrix:\n")
+    print(Matrix2)
     vectorResult = basicPageRank(Matrix2, basicVector, Vector([1, 1, 1, 1]))
-    print("Page Rank: {0}".format(str(vectorResult)))
+    print("Page Rank basic: {0}".format(str(vectorResult)), end="\n\n")
+    print("_____________________________________________________", end="\n\n")
+    vn = Vector.generateVector1n(4)
+    matrix2 = [[0, 1/2, 0, 0], [1/3, 0, 0, 1/2], [1/3, 0, 1, 1/2],
+               [1/3, 1/2, 0, 0]]
+    Matrix3 = Matrix(matrix2)
+    vectorResult = basicPageRank(Matrix3, basicVector, Vector([1, 1, 1, 1]))
+    print("#Without taxation all the probability goes to the third vertex")
+    print("Matrix:\n")
+    print(Matrix3)
+    print("Page Rank basic: {0}".format(str(vectorResult)), end="\n\n")
+    print("_____________________________________________________", end="\n\n")
+    vectorResult = taxationPageRank(Matrix3, basicVector, Vector([1, 1, 1, 1]), vn)
+    print("#Same Matrix: With the taxation we provide a better pagerank value (Beta=0.8)")
+    print("Matrix:\n")
+    print(Matrix3)
+    print("Page Rank taxation: {0}".format(str(vectorResult)))
