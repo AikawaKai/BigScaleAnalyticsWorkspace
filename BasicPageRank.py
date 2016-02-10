@@ -94,7 +94,7 @@ if __name__ == '__main__':
     basicVector = Vector([1/4, 1/4, 1/4, 1/4])
     Matrix1 = Matrix(matrix)
     vectorResult = basicPageRank(Matrix1, basicVector, Vector([1, 1, 1, 1]))
-    print("\n#Basic example with a connected graphs\n")
+    print("\n#Basic example with a connected graph\n")
     print("Matrix:\n")
     print(Matrix1)
     print("Page Rank basic: {0}".format(str(vectorResult)))
@@ -102,7 +102,7 @@ if __name__ == '__main__':
                [1/3, 1/2, 0, 0]]
     Matrix2 = Matrix(matrix1)
     print("_____________________________________________________", end="\n\n")
-    print("#Another example with a connected graphs\n")
+    print("#Another example with a connected graph\n")
     print("Matrix:\n")
     print(Matrix2)
     vectorResult = basicPageRank(Matrix2, basicVector, Vector([1, 1, 1, 1]))
