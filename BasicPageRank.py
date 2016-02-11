@@ -43,6 +43,10 @@ class Vector(object):
     def generateVector1n(n):
         return Vector([1/n for i in range(0, n)])
 
+    def generateMaskVector(maskvector):
+        s = sum(maskvector)
+        return Vector(list(map(lambda x: 1/s if x == 1 else 0, maskvector)))
+
     def __str__(self):
         basic = ""
         for elem in self.vector:
@@ -88,6 +92,13 @@ def taxationPageRank(matrix, v, pv, vn):
     return v if sum(diffv.vector) <= 0.0009 else taxationPageRank(matrix, (matrix.mulVect(v) * 0.8) + (vn * 0.2), v, vn)
 
 
+def trustRank(matrix, v, pv, vnmask):
+    diffv = v - pv
+    # print("Current:{0} Previous:{1}".format(v, pv))
+    # print("Diff {0}".format(diffv), end="\n\n")
+    return v if sum(diffv.vector) <= 0.0009 else trustRank(matrix, (matrix.mulVect(v) * 0.8) + (vnmask * 0.2), v, vnmask)
+
+
 if __name__ == '__main__':
     matrix = [[1/3, 0, 1/2, 0], [1/3, 1/2, 0, 1/3], [1/3, 1/2, 0, 1/3],
               [0, 0, 1/2, 1/3]]
@@ -98,6 +109,7 @@ if __name__ == '__main__':
     print("Matrix:\n")
     print(Matrix1)
     print("Page Rank basic: {0}".format(str(vectorResult)))
+
     matrix1 = [[0, 1/2, 1, 0], [1/3, 0, 0, 1/2], [1/3, 0, 0, 1/2],
                [1/3, 1/2, 0, 0]]
     Matrix2 = Matrix(matrix1)
@@ -107,6 +119,7 @@ if __name__ == '__main__':
     print(Matrix2)
     vectorResult = basicPageRank(Matrix2, basicVector, Vector([1, 1, 1, 1]))
     print("Page Rank basic: {0}".format(str(vectorResult)), end="\n\n")
+
     matrix3 = [[0, 1/2, 0, 0], [1/3, 0, 0, 1/2], [1/3, 0, 0, 1/2],
                [1/3, 1/2, 0, 0]]
     Matrix4 = Matrix(matrix3)
@@ -116,6 +129,7 @@ if __name__ == '__main__':
     print(Matrix4)
     vectorResult = basicPageRank(Matrix4, basicVector, Vector([1, 1, 1, 1]))
     print("Page Rank basic: {0}".format(str(vectorResult)), end="\n\n")
+
     vn = Vector.generateVector1n(4)
     matrix2 = [[0, 1/2, 0, 0], [1/3, 0, 0, 1/2], [1/3, 0, 1, 1/2],
                [1/3, 1/2, 0, 0]]
@@ -126,9 +140,19 @@ if __name__ == '__main__':
     print("Matrix:\n")
     print(Matrix3)
     print("Page Rank basic: {0}".format(str(vectorResult)), end="\n\n")
+
     print("_____________________________________________________", end="\n\n")
     vectorResult = taxationPageRank(Matrix3, basicVector, Vector([1, 1, 1, 1]), vn)
     print("#Same Matrix: With the taxation we provide a better pagerank value (Beta=0.8)")
     print("Matrix:\n")
     print(Matrix3)
     print("Page Rank taxation: {0}".format(str(vectorResult)))
+
+    print("_____________________________________________________", end="\n\n")
+    print("TrustRank: Node 1 e 3 trusted. Beta=0.8 ")
+    print("Matrix:\n")
+    print(Matrix2)
+    maskvector = Vector.generateMaskVector([0, 1, 0, 1])
+    print(maskvector)
+    vectorResult = trustRank(Matrix2, basicVector, Vector([1, 1, 1, 1]), maskvector)
+    print("Trust Rank (node 1 and 3): {0}".format(str(vectorResult)))
