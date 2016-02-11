@@ -124,8 +124,6 @@ def hubbinessAuthority(L, Lt, ph, pa):
     diffh = h - ph
     return (a, h) if sum(diffa.vector) <= 0.0009 and sum(diffh.vector) <= 0.0009 else hubbinessAuthority(L, Lt, h, a)
 
-
-
 if __name__ == '__main__':
     matrix = [[1/3, 0, 1/2, 0], [1/3, 1/2, 0, 1/3], [1/3, 1/2, 0, 1/3],
               [0, 0, 1/2, 1/3]]
