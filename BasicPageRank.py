@@ -117,8 +117,8 @@ if __name__ == '__main__':
     print("#Another example with a connected graph\n")
     print("Matrix:\n")
     print(Matrix2)
-    vectorResult = basicPageRank(Matrix2, basicVector, Vector([1, 1, 1, 1]))
-    print("Page Rank basic: {0}".format(str(vectorResult)), end="\n\n")
+    vectorResultPageRank = basicPageRank(Matrix2, basicVector, Vector([1, 1, 1, 1]))
+    print("Page Rank basic: {0}".format(str(vectorResultPageRank)), end="\n\n")
 
     matrix3 = [[0, 1/2, 0, 0], [1/3, 0, 0, 1/2], [1/3, 0, 0, 1/2],
                [1/3, 1/2, 0, 0]]
@@ -154,5 +154,15 @@ if __name__ == '__main__':
     print(Matrix2)
     maskvector = Vector.generateMaskVector([0, 1, 0, 1])
     print(maskvector)
-    vectorResult = trustRank(Matrix2, basicVector, Vector([1, 1, 1, 1]), maskvector)
-    print("Trust Rank (node 1 and 3): {0}".format(str(vectorResult)))
+    vectorResultTrust = trustRank(Matrix2, basicVector, Vector([1, 1, 1, 1]), maskvector)
+    print("Trust Rank (node 1 and 3): {0}".format(str(vectorResultTrust)))
+
+    print("_____________________________________________________", end="\n\n")
+    print("Spam Mass checking", end="\n\n")
+    print("{:>7} {:>10} {:>10} {:>10}".format("Nodo", "PageRank", "TrustRank", "SpamMass"))
+    pagerank = vectorResultPageRank.vector
+    trustrank = vectorResultTrust.vector
+    for i in range(len(pagerank)):
+        t = trustrank[i]
+        r = pagerank[i]
+        print("{:>7} {:>10.3} {:>10.3} {:>10.3}".format(i, r, t, (r-t)/r))
