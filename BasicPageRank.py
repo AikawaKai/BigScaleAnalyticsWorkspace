@@ -40,6 +40,9 @@ class Vector(object):
             vectresult = list(map(lambda x: x * elem, self.vector))
             return Vector(vectresult)
 
+    def cleanVector(self):
+        self.vector = list(map(lambda x: x if x > 0.0009 else 0, self.vector))
+
     def generateVector1n(n):
         return Vector([1/n for i in range(0, n)])
 
@@ -47,10 +50,10 @@ class Vector(object):
         s = sum(maskvector)
         return Vector(list(map(lambda x: 1/s if x == 1 else 0, maskvector)))
 
-    def __str__(self):
+    def __str__(self, precision=7):
         basic = ""
         for elem in self.vector:
-            el = "{0:>10.7} ".format(float(elem))
+            el = "{0:>10.{1}} ".format(float(elem), precision)
             basic += el
         return basic
 
@@ -59,6 +62,8 @@ class Matrix(object):
 
     def __init__(self, matrix):
         self.matrix = matrix
+        self.row = len(self.matrix)
+        self.column = len(self.matrix[0])
 
     def mulVect(self, vector):
         resV = []
@@ -66,6 +71,10 @@ class Matrix(object):
             elem = vector.mulSum(Vector(row))
             resV.append(elem)
         return Vector(resV)
+
+    def transpose(self):
+        tran = [[self.matrix[i][j] for i in range(self.row)] for j in range(self.column)]
+        return Matrix(tran)
 
     def __str__(self):
         basic = ""
@@ -97,6 +106,24 @@ def trustRank(matrix, v, pv, vnmask):
     # print("Current:{0} Previous:{1}".format(v, pv))
     # print("Diff {0}".format(diffv), end="\n\n")
     return v if sum(diffv.vector) <= 0.0009 else trustRank(matrix, (matrix.mulVect(v) * 0.8) + (vnmask * 0.2), v, vnmask)
+
+
+def normalize(vect, max):
+    v = vect.vector
+    return Vector(list(map(lambda x: x/max, v)))
+
+
+def hubbinessAuthority(L, Lt, ph, pa):
+    a = Lt.mulVect(ph)
+    h = L.mulVect(a)
+    maxa = max(a.vector)
+    maxh = max(h.vector)
+    a = normalize(a, maxa)
+    h = normalize(h, maxh)
+    diffa = a - pa
+    diffh = h - ph
+    return (a, h) if sum(diffa.vector) <= 0.0009 and sum(diffh.vector) <= 0.0009 else hubbinessAuthority(L, Lt, h, a)
+
 
 
 if __name__ == '__main__':
@@ -166,3 +193,21 @@ if __name__ == '__main__':
         t = trustrank[i]
         r = pagerank[i]
         print("{:>7} {:>10.3} {:>10.3} {:>10.3}".format(i, r, t, (r-t)/r))
+
+    print("\n\n_____________________________________________________", end="\n\n")
+    L = [[0, 1, 1, 1, 0], [1, 0, 0, 1, 0], [0, 0, 0, 0, 1], [0, 1, 1, 0, 0],
+         [0, 0, 0, 0, 0]]
+    MatrixL = Matrix(L)
+    print("")
+    print(MatrixL)
+    MatrixLt = MatrixL.transpose()
+    print(MatrixLt)
+    (a, h) = hubbinessAuthority(MatrixL, MatrixLt, Vector([1, 1, 1, 1, 1]),
+                                Vector([1, 1, 1, 1, 1]))
+    a.cleanVector()
+    h.cleanVector()
+    print("\nHubbiness:")
+    print(h.__str__(3))
+
+    print("\nAuthority:")
+    print(a.__str__(3))
