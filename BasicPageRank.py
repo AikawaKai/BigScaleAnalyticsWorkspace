@@ -107,12 +107,21 @@ if __name__ == '__main__':
     print(Matrix2)
     vectorResult = basicPageRank(Matrix2, basicVector, Vector([1, 1, 1, 1]))
     print("Page Rank basic: {0}".format(str(vectorResult)), end="\n\n")
+    matrix3 = [[0, 1/2, 0, 0], [1/3, 0, 0, 1/2], [1/3, 0, 0, 1/2],
+               [1/3, 1/2, 0, 0]]
+    Matrix4 = Matrix(matrix3)
     print("_____________________________________________________", end="\n\n")
+    print("#Another example with a graph with a dead end\n")
+    print("Matrix:\n")
+    print(Matrix4)
+    vectorResult = basicPageRank(Matrix4, basicVector, Vector([1, 1, 1, 1]))
+    print("Page Rank basic: {0}".format(str(vectorResult)), end="\n\n")
     vn = Vector.generateVector1n(4)
     matrix2 = [[0, 1/2, 0, 0], [1/3, 0, 0, 1/2], [1/3, 0, 1, 1/2],
                [1/3, 1/2, 0, 0]]
     Matrix3 = Matrix(matrix2)
     vectorResult = basicPageRank(Matrix3, basicVector, Vector([1, 1, 1, 1]))
+    print("_____________________________________________________", end="\n\n")
     print("#Without taxation all the probability goes to the third vertex")
     print("Matrix:\n")
     print(Matrix3)
