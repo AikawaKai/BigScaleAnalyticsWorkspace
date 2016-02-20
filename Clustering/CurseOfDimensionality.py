@@ -3,7 +3,7 @@ from math import sqrt
 from itertools import combinations
 
 lowerbound = 0
-upperbound = 1
+upperbound = 15
 
 
 def genRandomArray(d):
@@ -37,7 +37,7 @@ def standardDeviation(sample, d, average):
 
 if __name__ == '__main__':
     numsample = 100
-    d = 10000
+    d = 1000
     print("Uniform Distribution ({0}, {1})".format(lowerbound, upperbound))
     print("Number of sample: {0}".format(numsample))
     print("Number of dimension d: {0}".format(d))
