@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     sample = genSample(numsample, d)
     (average, maxd, mind) = averageDistance(sample, d)
-    print("(lowerbound={2}) <= {0} <= (upperbound = sqrt(({2}^2)*d) = {1})".format(average, sqrt(d*pow(upperbound, 2)), upperbound))
+    print("(lowerbound={2}) <= {0} <= (upperbound = sqrt(({2}^2)*d) = {1})".format(average, sqrt(d*pow(upperbound, 2)), pow((upperbound-lowerbound), 2)))
     print("Standard Deviation: ", standardDeviation(sample, d, average))
     print("Max distance: {0}".format(maxd))
     print("Min distance: {0}".format(mind))
