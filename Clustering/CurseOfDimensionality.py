@@ -3,7 +3,7 @@ from math import sqrt
 from itertools import combinations
 
 lowerbound = 0
-upperbound = 15
+upperbound = 1
 
 
 def genRandomArray(d):
@@ -48,3 +48,4 @@ if __name__ == '__main__':
     print("Standard Deviation: ", standardDeviation(sample, d, average))
     print("Max distance: {0}".format(maxd))
     print("Min distance: {0}".format(mind))
+    print("(MaxDistance - MinDistance)/MinDistance = {}".format((maxd-mind)/mind))
