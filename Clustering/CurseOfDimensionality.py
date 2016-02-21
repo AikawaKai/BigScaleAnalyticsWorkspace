@@ -47,7 +47,7 @@ def standardDeviation(couple, d, average):
 if __name__ == '__main__':
     numsample = 100
     d = 10000
-    distance = cosineDistance
+    distance = euclidianDistance
     print("Uniform Distribution ({0}, {1})".format(lowerbound, upperbound))
     print("Number of sample: {0}".format(numsample))
     print("Number of dimension d: {0}".format(d))
