@@ -5,7 +5,7 @@ from math import degrees
 from itertools import combinations
 import time
 
-lowerbound = -1
+lowerbound = 0
 upperbound = 1
 
 
@@ -56,14 +56,14 @@ def averageDistance(distFunc, couple, d):
 
 
 @timer
-def standardDeviation(couple, d, average):
+def standardDeviation(distFunc, ouple, d, average):
     lenCouple = len(couple)
-    return sqrt(sum([pow(euclidianDistance(c1, c2, d) - average, 2) for c1, c2 in couple])/lenCouple)
+    return sqrt(sum([pow(distFunc(c1, c2, d) - average, 2) for c1, c2 in couple])/lenCouple)
 
 
 if __name__ == '__main__':
     numsample = 100
-    d = 10000
+    d = 100000
     distance = cosineDistance
     print("-----------------DATA-------------------")
     print("Uniform Distribution ({0}, {1})".format(lowerbound, upperbound))
