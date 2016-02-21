@@ -75,7 +75,7 @@ if __name__ == '__main__':
     sample = genSample(numsample, d)
     couple = combinationsSample(sample)
     (average, maxd, mind) = averageDistance(distance, couple, d)
-    stdev = standardDeviation(couple, d, average)
+    stdev = standardDeviation(distance, couple, d, average)
     print("----------------RESULTS-----------------")
     if distance.__name__ == "euclidianDistance":
         print("(lowerbound={2}) <= {0} <= (upperbound = sqrt(({2}^2)*d) = {1})".format(average, sqrt(d*pow(upperbound, 2)), pow((upperbound-lowerbound), 2)))
