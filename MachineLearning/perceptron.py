@@ -39,8 +39,8 @@ def classify(x_y, w):
 
 
 if __name__ == '__main__':
-    listOfPositivePoint = [([6, 15, 1], +1), ([5, 6, 1], +1), ([6, 6, 1], +1), ([5, 7, 1], +1), ([7, 7, 1], +1)]
-    listOfNegativePoint = [([-5, 4, 1], -1),([1, 1, 1], -1), ([3, 2, 1], -1), ([3, 4, 1], -1), ([2, 0, 1], -1)]
+    listOfPositivePoint = [([-4, 8, 1], +1), ([-7, -3, 1], +1), ([-4, -6, 1], +1)]
+    listOfNegativePoint = [([-2, -8, 1], -1), ([4, -4, 1], -1), ([3, 8, 1], -1)]
     x_y = listOfNegativePoint + listOfPositivePoint
     print(x_y)
     w = [0, 0, 0]
