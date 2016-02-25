@@ -36,30 +36,42 @@ def perceptron(x_y_list, w, lr):
 
 
 def perceptronR(x_y, w, lr):
-    ynext = dot(x_y[0], w)
-    print(sign(ynext))
-    if sign(ynext) != x_y[1] or ynext == 0:
+    y = x_y[1]
+    x = x_y[0]
+    ynext = dot(x, w)
+    if sign(ynext) != y or ynext == 0:
         for i in range(len(w)):
-            w[i] = w[i] + lr*x_y[1]*x_y[0][i]
+            w[i] = w[i] + lr*y*x[i]
         perceptronR(x_y, w, lr)
 
+
+def classify(x_y, w):
+    results = [sign(dot(x, w)) == y for x, y in x_y]
+    print(w)
+    for res in results:
+        if not res:
+            return False
+    return True
+
+
 if __name__ == '__main__':
-    listOfPositivePoint = [([5, 4], +1), ([6, 7], +1), ([7, 7], +1)]
-    listOfNegativePoint = [([1, 2], -1), ([3, 4], -1), ([2, 0], -1)]
+    listOfPositivePoint = [([5, 6, 1], +1), ([6, 6, 1], +1), ([5, 7, 1], +1), ([7, 7, 1], +1)]
+    listOfNegativePoint = [([3, 2, 1], -1), ([3, 4, 1], -1), ([2, 0, 1], -1)]
     x_y = listOfNegativePoint + listOfPositivePoint
     print(x_y)
-    w = [0, 0]
-    lr = 0.1
-    perceptron(x_y, w, lr)
+    w = [0, 0, 0]
+    lr = 0.2
+    while(not classify(x_y, w)):
+        perceptron(x_y, w, lr)
     print(w)
     x1 = [x[0] for x, y in listOfPositivePoint]
     y1 = [x[1] for x, y in listOfPositivePoint]
     x2 = [x[0] for x, y in listOfNegativePoint]
     y2 = [x[1] for x, y in listOfNegativePoint]
-    x3 = -10
-    x4 = 10
-    y3 = -(w[0]/w[1])*(x3)
-    y4 = -(w[0]/w[1])*(x4)
+    x3 = -15
+    x4 = 15
+    y3 = -(w[0]/w[1])*(x3) - w[2]
+    y4 = -(w[0]/w[1])*(x4) - w[2]
     x = [x3, x4]
     y = [y3, y4]
     output_file("line.html")
