@@ -12,8 +12,7 @@ def perceptron(x_y_list, w, lr):
 
 
 def perceptronR(x_y, w, lr):
-    y = x_y[1]
-    x = x_y[0]
+    x,y = x_y[0],x_y[1]
     ynext = dot(x, w)
     if sign(1,ynext) != y or ynext == 0:
         for i in range(len(w)):
@@ -22,15 +21,10 @@ def perceptronR(x_y, w, lr):
 
 
 def classify(x_y, w):
-    results = [sign(1,dot(x, w)) == y for x, y in x_y]
-    for x, y in x_y:
-        print(dot(x, w), y)
-    print(results)
-    for res in results:
-        if not res:
+    for x,y in x_y:
+        if sign(1,dot(x,w)) != y:
             return False
     return True
-
 
 if __name__ == '__main__':
     listOfPositivePoint = [([6, 15, 1], +1), ([5, 6, 1], +1), ([6, 6, 1], +1), ([5, 7, 1], +1), ([7, 7, 1], +1)]
