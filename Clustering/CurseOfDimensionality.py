@@ -1,13 +1,9 @@
 import numpy as np
-from math import sqrt
-from math import acos
-from math import degrees
+from math import sqrt, acos, degrees
 from itertools import combinations
 import time
 
-lowerbound = 0
-upperbound = 1
-
+lowerbound,upperbound = 0,1
 
 def timer(fun):
     def wrapper(*args):
@@ -20,14 +16,9 @@ def timer(fun):
         return res
     return wrapper
 
-
-def genRandomArray(d):
-    return [np.random.uniform(lowerbound, upperbound) for i in range(0, d)]
-
-
 @timer
-def genSample(number, d):
-    return [genRandomArray(d) for i in range(0, number)]
+def genSample(n, d):
+    return [np.random.uniform(lowerbound, upperbound, d) for _ in range(0, n)]
 
 
 def euclidianDistance(point1, point2, d):
@@ -56,15 +47,15 @@ def averageDistance(distFunc, couple, d):
 
 
 @timer
-def standardDeviation(distFunc, ouple, d, average):
+def standardDeviation(distFunc, couple, d, average):
     lenCouple = len(couple)
     return sqrt(sum([pow(distFunc(c1, c2, d) - average, 2) for c1, c2 in couple])/lenCouple)
 
 
 if __name__ == '__main__':
     numsample = 100
-    d = 100000
-    distance = cosineDistance
+    d = 10000
+    distance = euclidianDistance
     print("-----------------DATA-------------------")
     print("Uniform Distribution ({0}, {1})".format(lowerbound, upperbound))
     print("[Number of sample]: {0}".format(numsample))
