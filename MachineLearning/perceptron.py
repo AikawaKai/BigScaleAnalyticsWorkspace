@@ -12,23 +12,25 @@ def perceptron(x_y_list, w, lr):
 
 
 def perceptronR(x_y, w, lr):
-    x,y = x_y[0],x_y[1]
+    x, y = x_y[0], x_y[1]
     ynext = dot(x, w)
-    if sign(1,ynext) != y or ynext == 0:
+    if sign(1, ynext) != y or ynext == 0:
         for i in range(len(w)):
             w[i] = w[i] + lr*y*x[i]
         perceptronR(x_y, w, lr)
 
 
 def classify(x_y, w):
-    for x,y in x_y:
-        if sign(1,dot(x,w)) != y:
+    for x, y in x_y:
+        if sign(1, dot(x, w)) != y:
             return False
     return True
 
 if __name__ == '__main__':
-    listOfPositivePoint = [([-4, 8, 1], +1), ([-7, -3, 1], +1), ([-4, -6, 1], +1)]
-    listOfNegativePoint = [([-2, -8, 1], -1), ([4, -4, 1], -1), ([3, 8, 1], -1)]
+    listOfPositivePoint = [([-4, 8, 1], +1), ([-7, -3, 1], +1),
+                           ([-4, -6, 1], +1)]
+    listOfNegativePoint = [([-2, -8, 1], -1), ([4, -4, 1], -1),
+                           ([3, 8, 1], -1)]
     x_y = listOfNegativePoint + listOfPositivePoint
     print(x_y)
     w = [0, 0, 0]
