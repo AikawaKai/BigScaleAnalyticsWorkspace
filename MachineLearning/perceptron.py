@@ -1,15 +1,9 @@
 from bokeh.plotting import figure, output_file, show
+from math import copysign as sign
 
 
 def dot(v1, v2):
     return sum([v1[i]*v2[i] for i in range(len(v1))])
-
-
-def sign(el):
-    if el < 0:
-        return -1
-    else:
-        return 1
 
 
 def perceptron(x_y_list, w, lr):
@@ -21,14 +15,14 @@ def perceptronR(x_y, w, lr):
     y = x_y[1]
     x = x_y[0]
     ynext = dot(x, w)
-    if sign(ynext) != y or ynext == 0:
+    if sign(1,ynext) != y or ynext == 0:
         for i in range(len(w)):
             w[i] = w[i] + lr*y*x[i]
         perceptronR(x_y, w, lr)
 
 
 def classify(x_y, w):
-    results = [sign(dot(x, w)) == y for x, y in x_y]
+    results = [sign(1,dot(x, w)) == y for x, y in x_y]
     for x, y in x_y:
         print(dot(x, w), y)
     print(results)
