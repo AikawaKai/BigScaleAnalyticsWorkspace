@@ -1,7 +1,9 @@
 import numpy as np
 from math import sqrt, acos, degrees
 from itertools import combinations
+from scipy.spatial import distance as loscroto
 import time
+import functools
 
 lowerbound,upperbound = 0,1
 
@@ -22,8 +24,8 @@ def genSample(n, d):
 
 
 def euclidianDistance(point1, point2, d):
-    return sqrt(sum([pow(point1[i]-point2[i], 2) for i in range(d)]))
-
+    #return sqrt(sum([pow(point1[i]-point2[i], 2) for i in range(d)]))
+    return sqrt((sum(map(lambda x: (x[0]-x[1])**2,zip(point1,point2)))))
 
 def cosineDistance(point1, point2, d):
     num = sum([point1[i]*point2[i] for i in range(d)])
