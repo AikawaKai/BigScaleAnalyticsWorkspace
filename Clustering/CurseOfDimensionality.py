@@ -1,7 +1,6 @@
 import numpy as np
 from math import sqrt, acos, degrees
 from itertools import combinations
-from scipy.spatial import distance as loscroto
 import time
 import functools
 
