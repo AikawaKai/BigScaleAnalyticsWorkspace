@@ -10,17 +10,19 @@ def AMSestimate(vector):
             elements[el] += 1
         elif random.choice(range(0, 10)) == 0:
             elements[el] = 1
-    # E(n * (2 * x.value -1))
+    # E(n * (2 * x.value - 1))
     lendict = len(elements)
     estimateM2 = 0
     for key, value in elements.items():
         estimateM2 += lenvect * ((2 * value) - 1)
-    return estimateM2/lendict
+    if lendict > 0:
+        return estimateM2/lendict
 
 
-def genRandomVect(size=100):
+def genRandomVect(size=15):
     print(len(string.ascii_letters))
     return [random.choice(string.ascii_letters) for x in range(size)]
+    # return [random.choice([random.choice(['a', 'b', 'c', 'd'])]) for x in range(size)]
 
 
 def secondMoment(vector):
@@ -35,5 +37,7 @@ def secondMoment(vector):
 
 if __name__ == '__main__':
     vect = genRandomVect()
+    # vect1 = ["a", "b", "c", "b", "d", "a", "c", "d", "a", "b", "d", "c", "a", "a", "b"]
+    # print("True Second Moment:", secondMoment(vect1 ))
     print("True Second Moment:", secondMoment(vect))
     print("Estimate Second Moment with AMS:", AMSestimate(vect))
