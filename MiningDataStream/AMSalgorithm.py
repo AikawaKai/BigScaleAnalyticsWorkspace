@@ -18,8 +18,9 @@ def AMSestimate(vector):
     return estimateM2/lendict
 
 
-def genRandomVect():
-    return [random.choice(string.ascii_letters) for x in range(100)]
+def genRandomVect(size=100):
+    print(len(string.ascii_letters))
+    return [random.choice(string.ascii_letters) for x in range(size)]
 
 
 def secondMoment(vector):
