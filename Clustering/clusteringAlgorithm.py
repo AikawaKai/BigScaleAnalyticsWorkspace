@@ -3,12 +3,6 @@ from numpy import random
 from itertools import combinations
 from math import sqrt
 
-'''
-plt.plot([1, 2, 3, 4], [2, 3, 4, 5], 'ro')
-plt.axis([0, 20, 0, 20])
-plt.ylabel('some numbers')
-plt.show()'''
-
 
 class Cluster(object):
 
@@ -76,9 +70,6 @@ def plotClusters(setClusters):
     plt.show()
 
 
-
-
-
 if __name__ == '__main__':
     listOfPoint = genSample(100)
     # print(listOfPoint)
@@ -87,11 +78,7 @@ if __name__ == '__main__':
     for ele in listOfPoint:
         list1.append(ele[0])
         list2.append(ele[1])
-    # print(list1, list2)
-    # plt.plot(list1, list2, 'wo')
     plt.axis([0, 100, 0, 100])
-    # plt.ylabel('some numbers')
-    # plt.show()
     listOfCluster = [Cluster(point) for point in listOfPoint]
     setClusters = hierarchyClustering(listOfCluster, 8)
     plotClusters(setClusters)
