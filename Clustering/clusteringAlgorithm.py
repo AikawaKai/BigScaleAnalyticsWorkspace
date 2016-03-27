@@ -33,11 +33,50 @@ class Cluster(object):
     def euclideanDist(self, other):
         x = self.centroid
         y = other.centroid
-        return sqrt(sum([pow(x[i]-y[i], 2) for i in range(self.len)]))
+        return sqrt(sum([pow(x[i]-y[i], 2) for i in range(2)]))
 
 
 def genSample(size):
     return [random.random_integers(0, 100, 2) for x in range(size)]
+
+
+def hierarchyClustering(clusters, numclusters):
+    setClusters = set(clusters)
+    numtot = len(setClusters)
+    if(numtot <= numclusters):
+        return clusters
+    while numtot > numclusters:
+        combList = combinations(setClusters, 2)
+        listDistance = []
+        for x, y in combList:
+            listDistance.append((x.euclideanDist(y), (x, y)))
+        coupleMinDistance = min(listDistance, key=lambda x: x[0])
+        for point in coupleMinDistance[1][1].listOfPoint:
+            coupleMinDistance[1][0].addPoint(point)
+        setClusters.remove(coupleMinDistance[1][1])
+        numtot = len(setClusters)
+    return setClusters
+
+
+setcolor = ['b', 'r', 'g', 'y', 'm', 'k', 'w', 'c']
+
+
+def plotClusters(setClusters):
+    plt.axis([0, 100, 0, 100])
+    i = 0
+    for cluster in setClusters:
+        l = cluster.listOfPoint
+        list1 = []
+        list2 = []
+        for point in l:
+            list1.append(point[0])
+            list2.append(point[1])
+        plt.plot(list1, list2, 'o'+setcolor[i])
+        i += 1
+    plt.show()
+
+
+
 
 
 if __name__ == '__main__':
@@ -49,11 +88,10 @@ if __name__ == '__main__':
         list1.append(ele[0])
         list2.append(ele[1])
     # print(list1, list2)
-    plt.plot(list1, list2, 'wo')
+    # plt.plot(list1, list2, 'wo')
     plt.axis([0, 100, 0, 100])
-    plt.ylabel('some numbers')
+    # plt.ylabel('some numbers')
     # plt.show()
     listOfCluster = [Cluster(point) for point in listOfPoint]
-    combList = combinations(listOfCluster, 2)
-    for x, y in combList:
-        print(x.euclideanDist(y))
+    setClusters = hierarchyClustering(listOfCluster, 8)
+    plotClusters(setClusters)
