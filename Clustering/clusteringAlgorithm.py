@@ -93,7 +93,7 @@ def plotClusters(setClusters):
         if i > 7:
             i = 0
 
-powers2 = [pow(2, i) for i in range(1, 10)]
+powers2 = [pow(2, i) for i in range(1, 4)]
 
 
 def meanrayClusters(setClusters):
@@ -134,11 +134,26 @@ def k_means(points):
         addPointsToSet(k_points, setPoint, pow2 - len(k_points))
         setClusters = {Cluster(point) for point in k_points}
         k_means_core(setPoint, setClusters)
+        reassignPointStep(setClusters)
         currmeanray = meanrayClusters(setClusters)
         if(abs(abs(currmeanray-meanray)-diff) < 0.8):
             break
         meanray = currmeanray
     return setClusters
+
+
+def reassignPointStep(setClusters):
+    points = [cluster.listOfPoint for cluster in setClusters]
+    listpoints = []
+    for l in points:
+        listpoints + l
+    setClusters = {Cluster(cluster.centroid) for cluster in setClusters}
+    for point in listpoints:
+        distances = [(cluster.euclideanDistPoint(point), cluster)
+                     for cluster in setClusters]
+        mindist = min(distances, key=lambda x: x[0])
+        clust = mindist[1]
+        clust.addPoint(point)
 
 
 def k_means_core(setPoint, setClusters):
