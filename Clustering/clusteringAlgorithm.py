@@ -1,7 +1,15 @@
 import matplotlib.pyplot as plt
-from numpy import random
+from numpy import random as randomN
 from itertools import combinations
 from math import sqrt
+import random
+
+
+class Point(object):
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
 
 
 class Cluster(object):
@@ -11,27 +19,37 @@ class Cluster(object):
         self.len = 1
         self.listOfPoint.append(point)
         self.centroid = point
-        self.sum1 = point[0]
-        self.sum2 = point[1]
+        self.sum1 = point.x
+        self.sum2 = point.y
+        self.ray = 0
 
     def addPoint(self, point):
         self.listOfPoint.append(point)
         self.len += 1
-        self.sum1 += point[0]
-        self.sum2 += point[1]
+        self.sum1 += point.x
+        self.sum2 += point.y
         self.computeCentroid()
+        self.ray = 0
+        for point in self.listOfPoint:
+            self.ray += self.euclideanDistPoint(point)
+        self.ray = self.ray/self.len
 
     def computeCentroid(self):
-        self.centroid = [self.sum1/self.len, self.sum2/self.len]
+        self.centroid = Point(self.sum1/self.len, self.sum2/self.len)
 
     def euclideanDist(self, other):
-        x = self.centroid
-        y = other.centroid
-        return sqrt(sum([pow(x[i]-y[i], 2) for i in range(2)]))
+        c1 = self.centroid
+        c2 = other.centroid
+        return sqrt(sum([pow(c1.x-c2.x, 2), pow(c1.y-c2.y, 2)]))
+
+    def euclideanDistPoint(self, point):
+        c1 = self.centroid
+        c2 = point
+        return sqrt(sum([pow(c1.x-c2.x, 2), pow(c1.y-c2.y, 2)]))
 
 
 def genSample(size):
-    return [random.random_integers(0, 100, 2) for x in range(size)]
+    return [randomN.random_integers(0, 100, 2) for x in range(size)]
 
 
 def hierarchyClustering(clusters, numclusters):
@@ -43,9 +61,12 @@ def hierarchyClustering(clusters, numclusters):
         combList = combinations(setClusters, 2)
         listDistance = []
         for x, y in combList:
+            print(x.centroid, y.centroid)
             listDistance.append((x.euclideanDist(y), (x, y)))
         coupleMinDistance = min(listDistance, key=lambda x: x[0])
+        print(coupleMinDistance[1][1].listOfPoint)
         for point in coupleMinDistance[1][1].listOfPoint:
+            print(point)
             coupleMinDistance[1][0].addPoint(point)
         setClusters.remove(coupleMinDistance[1][1])
         numtot = len(setClusters)
@@ -63,22 +84,69 @@ def plotClusters(setClusters):
         list1 = []
         list2 = []
         for point in l:
-            list1.append(point[0])
-            list2.append(point[1])
+            list1.append(point.x)
+            list2.append(point.y)
         plt.plot(list1, list2, 'o'+setcolor[i])
         i += 1
+        if i > 7:
+            i = 0
     plt.show()
 
+powers2 = [pow(2, i) for i in range(1, 10)]
+
+
+def meanrayClusters(setClusters):
+    sumray = 0
+    for cluster in setClusters:
+        sumray += cluster.ray
+    return sumray/len(setClusters)
+
+
+def addPointsToSet(k_points, setPoint, numToAdd):
+    for i in range(numToAdd):
+        point = random.sample(setPoint, 1)
+        k_points.add(point)
+        setPoint.remove(point)
+
+
+def k_means(points):
+    setPoint = set(points)
+    first = random.sample(setPoint, 1)[0]
+    k_points = set()
+    k_points.add(first)
+    setPoint.remove(first)
+    setClusters = {Cluster(list(point)) for point in k_points}
+    k_means_core(setPoint, setClusters)
+    meanray = meanrayClusters(setClusters)
+    for pow2 in powers2:
+        addPointsToSet(k_points, setPoint, pow2 - len(k_points))
+        setClusters = {Cluster(point) for point in k_points}
+        k_means_core(setPoint, setClusters)
+        currmeanray = meanrayClusters(setClusters)
+        if(abs(currmeanray-meanray) < 5):
+            break
+        meanray = currmeanray
+    return setClusters
+
+
+def k_means_core(setPoint, setClusters):
+    for point in setPoint:
+        distances = [(cluster.euclideanDistPoint(point), cluster)
+                     for cluster in setClusters]
+        mindist = min(distances, key=lambda x: x[0])
+        selectedcluster = mindist[1]
+        selectedcluster.addPoint(point)
 
 if __name__ == '__main__':
     listOfPoint = genSample(100)
+    listOfPoint = [Point(p[0], p[1]) for p in listOfPoint]
     # print(listOfPoint)
     list1 = []
     list2 = []
-    for ele in listOfPoint:
-        list1.append(ele[0])
-        list2.append(ele[1])
     plt.axis([0, 100, 0, 100])
     listOfCluster = [Cluster(point) for point in listOfPoint]
-    setClusters = hierarchyClustering(listOfCluster, 8)
+    setClusters = hierarchyClustering(listOfCluster, 7)
     plotClusters(setClusters)
+    listOfPoint1 = [(point[0], point[1]) for point in listOfPoint]
+    print(listOfPoint1)
+    setClusters = k_means(listOfPoint1)
