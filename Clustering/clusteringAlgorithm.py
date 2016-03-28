@@ -61,12 +61,9 @@ def hierarchyClustering(clusters, numclusters):
         combList = combinations(setClusters, 2)
         listDistance = []
         for x, y in combList:
-            print(x.centroid, y.centroid)
             listDistance.append((x.euclideanDist(y), (x, y)))
         coupleMinDistance = min(listDistance, key=lambda x: x[0])
-        print(coupleMinDistance[1][1].listOfPoint)
         for point in coupleMinDistance[1][1].listOfPoint:
-            print(point)
             coupleMinDistance[1][0].addPoint(point)
         setClusters.remove(coupleMinDistance[1][1])
         numtot = len(setClusters)
@@ -104,7 +101,7 @@ def meanrayClusters(setClusters):
 
 def addPointsToSet(k_points, setPoint, numToAdd):
     for i in range(numToAdd):
-        point = random.sample(setPoint, 1)
+        point = random.sample(setPoint, 1)[0]
         k_points.add(point)
         setPoint.remove(point)
 
@@ -115,7 +112,7 @@ def k_means(points):
     k_points = set()
     k_points.add(first)
     setPoint.remove(first)
-    setClusters = {Cluster(list(point)) for point in k_points}
+    setClusters = {Cluster(point) for point in k_points}
     k_means_core(setPoint, setClusters)
     meanray = meanrayClusters(setClusters)
     for pow2 in powers2:
@@ -123,7 +120,7 @@ def k_means(points):
         setClusters = {Cluster(point) for point in k_points}
         k_means_core(setPoint, setClusters)
         currmeanray = meanrayClusters(setClusters)
-        if(abs(currmeanray-meanray) < 5):
+        if(abs(currmeanray-meanray) < 10):
             break
         meanray = currmeanray
     return setClusters
@@ -146,7 +143,6 @@ if __name__ == '__main__':
     plt.axis([0, 100, 0, 100])
     listOfCluster = [Cluster(point) for point in listOfPoint]
     setClusters = hierarchyClustering(listOfCluster, 7)
+    # plotClusters(setClusters)
+    setClusters = k_means(listOfPoint)
     plotClusters(setClusters)
-    listOfPoint1 = [(point[0], point[1]) for point in listOfPoint]
-    print(listOfPoint1)
-    setClusters = k_means(listOfPoint1)
