@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from numpy import random as randomN
 from itertools import combinations
+from itertools import product
 from math import sqrt
 import random
 
@@ -10,6 +11,9 @@ class Point(object):
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
+    def euclideanDist(self, other):
+        return sqrt(sum([pow(self.x-other.x, 2), pow(self.y-other.y, 2)]))
 
 
 class Cluster(object):
@@ -84,10 +88,10 @@ def plotClusters(setClusters):
             list1.append(point.x)
             list2.append(point.y)
         plt.plot(list1, list2, 'o'+setcolor[i])
+        plt.plot([cluster.centroid.x], [cluster.centroid.y], 'xk')
         i += 1
         if i > 7:
             i = 0
-    plt.show()
 
 powers2 = [pow(2, i) for i in range(1, 10)]
 
@@ -100,9 +104,17 @@ def meanrayClusters(setClusters):
 
 
 def addPointsToSet(k_points, setPoint, numToAdd):
-    for i in range(numToAdd):
-        point = random.sample(setPoint, 1)[0]
+    listpoints = [random.sample(setPoint, numToAdd) for i in range(10)]
+    couple_dist = []
+    for points in listpoints:
+        prod = product(k_points, points)
+        temp_distance = (sum([x.euclideanDist(y) for x, y in prod]), points)
+        couple_dist.append(temp_distance)
+    max_dist = max(couple_dist, key=lambda x: x[0])
+    points = max_dist[1]
+    for point in points:
         k_points.add(point)
+    for point in points:
         setPoint.remove(point)
 
 
@@ -115,12 +127,15 @@ def k_means(points):
     setClusters = {Cluster(point) for point in k_points}
     k_means_core(setPoint, setClusters)
     meanray = meanrayClusters(setClusters)
+    diff = 10
     for pow2 in powers2:
+        if pow2 > len(setPoint):
+            break
         addPointsToSet(k_points, setPoint, pow2 - len(k_points))
         setClusters = {Cluster(point) for point in k_points}
         k_means_core(setPoint, setClusters)
         currmeanray = meanrayClusters(setClusters)
-        if(abs(currmeanray-meanray) < 10):
+        if(abs(abs(currmeanray-meanray)-diff) < 0.8):
             break
         meanray = currmeanray
     return setClusters
@@ -140,9 +155,13 @@ if __name__ == '__main__':
     # print(listOfPoint)
     list1 = []
     list2 = []
+    plt.figure(0)
     plt.axis([0, 100, 0, 100])
     listOfCluster = [Cluster(point) for point in listOfPoint]
     setClusters = hierarchyClustering(listOfCluster, 7)
-    # plotClusters(setClusters)
-    setClusters = k_means(listOfPoint)
     plotClusters(setClusters)
+    plt.figure(1)
+    setClusters = k_means(listOfPoint)
+    print(len(setClusters))
+    plotClusters(setClusters)
+    plt.show()
